@@ -1,0 +1,12 @@
+package com.coderman.api.system.mapper;
+
+import com.coderman.api.common.pojo.system.Role;
+import tk.mybatis.mapper.common.Mapper;
+
+/**
+ * @Author
+ * @Date 2020/3/7 15:54
+ * @Version 1.0
+ **/
+public interface RoleMapper extends Mapper<Role> {
+}
