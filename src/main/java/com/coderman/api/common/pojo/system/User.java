@@ -61,8 +61,6 @@ public class User {
     @ExcelField(value = "出生日期", dateFormat = "yyyy/MM/dd",width = 100)
     private Date birth;
 
-    private Long departmentId;
-
     @ExcelField(value = "头像url", width = 200)
     private String avatar;
 

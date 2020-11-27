@@ -1,11 +1,8 @@
 package com.coderman.api.system.converter;
 
-import com.coderman.api.system.mapper.DepartmentMapper;
-import com.coderman.api.common.pojo.system.Department;
 import com.coderman.api.common.pojo.system.User;
 import com.coderman.api.system.vo.UserVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -20,8 +17,6 @@ import java.util.List;
 @Component
 public class UserConverter {
 
-    @Autowired
-    private DepartmentMapper departmentMapper;
 
     /**
      * 转voList
@@ -47,12 +42,6 @@ public class UserConverter {
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
         userVO.setStatus(user.getStatus() == 0);
-        Department department = departmentMapper.selectByPrimaryKey(user.getDepartmentId());
-        if(department!=null&&department.getName()!=null){
-            userVO.setDepartmentName(department.getName());
-            userVO.setDepartmentId(department.getId());
-        }
-
         return userVO;
     }
 

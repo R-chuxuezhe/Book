@@ -1,8 +1,13 @@
 package com.coderman.api.book.service;
 
-import com.coderman.api.book.vo.BookVo;
+import com.coderman.api.book.vo.*;
 import com.coderman.api.common.pojo.book.Book;
+import com.coderman.api.common.pojo.book.BookFindings;
+import com.coderman.api.common.pojo.book.Record;
 import com.coderman.api.system.vo.PageVO;
+
+import java.util.List;
+import java.util.Map;
 
 public interface BookService {
 
@@ -15,4 +20,20 @@ public interface BookService {
     void delete(Long id);
 
     Book getInfo(Long id);
+
+    void examine(BookFindingsEditVo bookFindingsEditVo);
+
+    void upDown(BookVo bookVo);
+
+    BookFindings getBookFindings(Long id);
+
+    List<BookFindings> getBookFindingsAll(Long id);
+
+    List<CategoryListVo> getCategory();
+
+    PageVO<BookVo> findBookRecondList(Integer pageNum, Integer pageSize, Book book, Record record);
+
+    int bookCount(Record record);
+
+    List<BookRankVo> findRanking(Record record);
 }

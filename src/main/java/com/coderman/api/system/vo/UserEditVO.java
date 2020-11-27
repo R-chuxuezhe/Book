@@ -34,7 +34,4 @@ public class UserEditVO {
     @NotNull(message = "生日不能为空")
     private Date birth;
 
-    @NotNull(message = "部门不能为空")
-    private Long departmentId;
-
 }

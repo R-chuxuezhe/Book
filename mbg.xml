@@ -11,8 +11,8 @@
 
 		<!-- 配置数据库连接 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://127.0.0.1:3306/book" userId="root"
-			password="root">
+			connectionURL="jdbc:mysql://123.56.103.203:3306/book" userId="root"
+			password="171007liwu">
 			<property name="serverTimezone" value="UTC"></property>
 		</jdbcConnection>
 

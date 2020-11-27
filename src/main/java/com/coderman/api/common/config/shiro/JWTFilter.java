@@ -49,8 +49,8 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         //完成token登入
         //1.检查请求头中是否含有token
         HttpServletRequest httpServletRequest= (HttpServletRequest) request;
-        //String token = httpServletRequest.getHeader("Authorization");
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDYyMzE3MzksInVzZXJuYW1lIjoiYWRtaW4ifQ.ANrVfz90gENeR5hTIbojOV6HcuXgM8d426GnHMNygg0";
+        String token = httpServletRequest.getHeader("Authorization");
+        //String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDY0OTk3NzUsInVzZXJuYW1lIjoibWFzdGVyIn0.lrxyQNddXhuc1HDm9pcIn4a6zxsijLK4thKIinML3NI";
         //2. 如果客户端没有携带token，拦下请求
         if(null==token||"".equals(token)){
             responseTokenError(response,"Token无效，您无权访问该接口");

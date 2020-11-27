@@ -1,13 +1,12 @@
 package com.coderman.api.book.controller;
 
-import com.coderman.api.biz.vo.ConsumerVO;
-import com.coderman.api.biz.vo.SupplierVO;
 import com.coderman.api.book.service.BookService;
-import com.coderman.api.book.vo.BookVo;
-import com.coderman.api.common.annotation.ControllerEndpoint;
+import com.coderman.api.book.vo.*;
 import com.coderman.api.common.bean.ActiveUser;
 import com.coderman.api.common.bean.ResponseBean;
 import com.coderman.api.common.pojo.book.Book;
+import com.coderman.api.common.pojo.book.BookFindings;
+import com.coderman.api.common.pojo.book.Record;
 import com.coderman.api.system.vo.PageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +14,9 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Api(tags = "书籍接口")
 @RestController
@@ -45,7 +47,6 @@ public class BookController {
      *
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "书籍添加失败", operation = "书籍添加")
     @ApiOperation(value = "添加书籍")
     @PostMapping("/add")
     public ResponseBean add(@RequestBody @Validated BookVo bookVo) {
@@ -61,7 +62,6 @@ public class BookController {
      *
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "书籍修改失败", operation = "书籍修改")
     @ApiOperation(value = "修改书籍")
     @PostMapping("/edit")
     public ResponseBean edit(@RequestBody @Validated BookVo bookVo) {
@@ -71,12 +71,27 @@ public class BookController {
         return ResponseBean.success("成功");
     }
 
+
+    /**
+     * 上下架书籍
+     *
+     * @return
+     */
+    @ApiOperation(value = "上下架书籍")
+    @PostMapping("/upDown")
+    public ResponseBean upDown(@RequestBody @Validated BookVo bookVo) {
+        ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
+        bookVo.setCreateUser(activeUser.getUser().getId());
+        bookService.upDown(bookVo);
+        return ResponseBean.success("成功");
+    }
+
+
     /**
      * 删除书籍
      * @param id
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "书籍删除失败", operation = "书籍删除")
     @ApiOperation(value = "删除书籍", notes = "删除书籍")
     @DeleteMapping("/delete/{id}")
     public ResponseBean delete(@PathVariable Long id) {
@@ -89,7 +104,6 @@ public class BookController {
      * @param id
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "获取单个书籍失败", operation = "获取单个书籍")
     @ApiOperation(value = "获取单个书籍", notes = "获取单个书籍")
     @GetMapping("/getInfo/{id}")
     public ResponseBean getInfo(@PathVariable Long id){
@@ -99,7 +113,93 @@ public class BookController {
         }else {
             return ResponseBean.error("获取单个书籍失败！");
         }
-
     }
 
+    /**
+     * 获取书籍的待审核
+     * @param id  //书籍ID
+     * @return
+     */
+    @ApiOperation(value = "获取书籍的待审核", notes = "获取书籍的待审核")
+    @GetMapping("/getBookFindings/{id}")
+    public ResponseBean getBookFindings(@PathVariable Long id){
+        BookFindings bookFindings=bookService.getBookFindings(id);
+        if (bookFindings!=null){
+            return ResponseBean.success(bookFindings);
+        }else {
+            return ResponseBean.error("获取审核记录失败！");
+        }
+    }
+
+    /**
+     * 获取书籍的全部审核记录
+     * @param id  //书籍ID
+     * @return
+     */
+    @ApiOperation(value = "获取书籍的待审核", notes = "获取书籍的待审核")
+    @GetMapping("/getBookFindingsAll/{id}")
+    public ResponseBean getBookFindingsAll(@PathVariable Long id){
+        List<BookFindings> bookFindingsList=bookService.getBookFindingsAll(id);
+        if (bookFindingsList.size()>0){
+            return ResponseBean.success(bookFindingsList);
+        }else {
+            return ResponseBean.error("获取审核记录失败！");
+        }
+    }
+
+
+    /**
+     * 审核书籍
+     *
+     * @return
+     */
+    @ApiOperation(value = "审核书籍")
+    @PostMapping("/examine")
+    public ResponseBean examine(@RequestBody @Validated BookFindingsEditVo bookFindingsEditVo) {
+        bookService.examine(bookFindingsEditVo);
+        return ResponseBean.success("成功");
+    }
+
+    /**
+     * 获取图书检索失败！
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "获取图书检索失败！", notes = "获取图书检索失败！")
+    @GetMapping("/getCategory")
+    public ResponseBean getCategory(){
+        List<CategoryListVo> categoryListVo=bookService.getCategory();
+        if(categoryListVo!=null){
+            return ResponseBean.success(categoryListVo);
+        }else {
+            return ResponseBean.error("获取图书检索失败！");
+        }
+    }
+
+
+    /**
+     * 个人借阅及下载列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "个人借阅及下载列表", notes = "个人借阅及下载列表")
+    @GetMapping("/findBookRecondList")
+    public ResponseBean findBookRecondList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                           @RequestParam(value = "pageSize") Integer pageSize,
+                                           Book book, Record Record) {
+        PageVO<BookVo> bookVoPageVO = bookService.findBookRecondList(pageNum, pageSize, book,Record);
+        return ResponseBean.success(bookVoPageVO);
+    }
+
+    /**
+     * 阅读或下载量查询
+     *
+     * @return
+     */
+    @ApiOperation(value = "阅读或下载量查询")
+    @GetMapping("/bookCount")
+    public ResponseBean bookCount(Record record) {
+        int count=bookService.bookCount(record);
+        return ResponseBean.success(count);
+    }
 }

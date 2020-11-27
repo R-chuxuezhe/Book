@@ -1,7 +1,5 @@
 package com.coderman.api.common.utils;
 
-import com.coderman.api.biz.vo.ProductCategoryTreeNodeVO;
-
 import java.util.ArrayList;
 import java.util.List;
 

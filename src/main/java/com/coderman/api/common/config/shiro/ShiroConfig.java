@@ -55,6 +55,7 @@ public class ShiroConfig {
         filterRuleMap.put("/**", "jwt");
         // 访问401和404页面不通过我们的Filter
         filterRuleMap.put("/user/login", "anon");
+        filterRuleMap.put("/user/add", "anon");
         filterRuleMap.put("/user/imgCode", "anon");
         //开放API文档接口
         filterRuleMap.put("/swagger-ui.html", "anon");

@@ -1,6 +1,5 @@
 package com.coderman.api.system.controller;
 
-import com.coderman.api.common.annotation.ControllerEndpoint;
 import com.coderman.api.common.bean.ResponseBean;
 import com.coderman.api.common.pojo.system.Role;
 import com.coderman.api.system.service.MenuService;
@@ -44,9 +43,7 @@ public class RoleController {
      * @param mids
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "角色授权失败", operation = "角色授权")
     @ApiOperation(value = "角色授权")
-    //@RequiresPermissions({"role:authority"})
     @PostMapping("/authority/{id}")
     public ResponseBean authority(@PathVariable Long id, @RequestBody Long[] mids) {
         roleService.authority(id, mids);
@@ -93,9 +90,7 @@ public class RoleController {
      * @param roleVO
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "添加角色失败", operation = "添加角色")
     @ApiOperation(value = "添加角色")
-    //@RequiresPermissions({"role:add"})
     @PostMapping("/add")
     public ResponseBean add(@RequestBody @Validated RoleVO roleVO) {
         roleService.add(roleVO);
@@ -108,9 +103,7 @@ public class RoleController {
      * @param id 角色ID
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "删除角色失败", operation = "删除角色")
     @ApiOperation(value = "删除角色", notes = "根据id删除角色信息")
-    //@RequiresPermissions({"role:delete"})
     @DeleteMapping("/delete/{id}")
     public ResponseBean delete(@PathVariable Long id) {
         roleService.deleteById(id);
@@ -126,7 +119,6 @@ public class RoleController {
      */
     @ApiOperation(value = "编辑用户", notes = "根据id更新角色信息")
     @GetMapping("/edit/{id}")
-    //@RequiresPermissions({"role:edit"})
     public ResponseBean edit(@PathVariable Long id) {
         RoleVO roleVO = roleService.edit(id);
         return ResponseBean.success(roleVO);
@@ -139,9 +131,7 @@ public class RoleController {
      * @param roleVO
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "更新角色失败", operation = "更新角色")
     @ApiOperation(value = "更新角色", notes = "根据id更新角色信息")
-    //@RequiresPermissions({"role:update"})
     @PutMapping("/update/{id}")
     public ResponseBean update(@PathVariable Long id, @RequestBody @Validated RoleVO roleVO) {
         roleService.update(id, roleVO);
@@ -155,9 +145,7 @@ public class RoleController {
      * @param status
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "角色更新状态失败", operation = "角色|禁用/启用")
     @ApiOperation(value = "更新状态", notes = "禁用和更新两种状态")
-    //@RequiresPermissions({"role:status"})
     @PutMapping("/updateStatus/{id}/{status}")
     public ResponseBean updateStatus(@PathVariable Long id, @PathVariable Boolean status) {
         roleService.updateStatus(id, status);
@@ -170,8 +158,6 @@ public class RoleController {
      */
     @ApiOperation(value = "导出excel", notes = "导出所有角色的excel表格")
     @PostMapping("/excel")
-    //@RequiresPermissions("role:export")
-    @ControllerEndpoint(exceptionMessage = "导出Excel失败",operation = "导出角色excel")
     public void export(HttpServletResponse response) {
         List<Role> roles = this.roleService.findAll();
         ExcelKit.$Export(Role.class, response).downXlsx(roles, false);

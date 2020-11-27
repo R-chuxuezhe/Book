@@ -34,7 +34,6 @@ public class BookVo {
 
     private Integer status;
 
-    @NotNull(message = "创建人不能为空")
     private Long createUser;
 
     @NotNull(message = "图书检索ID不能为空")
@@ -44,4 +43,10 @@ public class BookVo {
     private String remark;
 
     private Integer delStatus;
+
+    @NotBlank(message = "图书封面不能为空")
+    private String cover;
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date recordTime;
 }

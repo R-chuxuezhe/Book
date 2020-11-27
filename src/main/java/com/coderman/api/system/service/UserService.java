@@ -23,29 +23,8 @@ public interface UserService {
      */
      User findUserByName(String name);
 
-    /**
-     * 查询用户角色
-     *
-     * @param id 用户id
-     * @return
-     */
-     List<Role> findRolesById(Long id);
 
-    /**
-     * 根据用户角色查询用户的菜单
-     * 菜单: menu+button
-     *
-     * @param roles 用户的角色
-     * @return
-     */
-    List<Menu> findMenuByRoles(List<Role> roles);
 
-    /**
-     * 加载菜单
-     *
-     * @return
-     */
-    List<MenuNodeVO> findMenu();
 
     /**
      * 用户列表
@@ -54,12 +33,7 @@ public interface UserService {
      */
     PageVO<UserVO> findUserList(Integer pageNum,Integer pageSize,UserVO userVO);
 
-    /**
-     * 删除用户
-     *
-     * @param id
-     */
-    void deleteById(Long id);
+
 
     /**
      * 更新状态
@@ -71,9 +45,9 @@ public interface UserService {
 
     /**
      * 添加用户
-     * @param userVO
+     * @param userAddVO
      */
-    void add(UserVO userVO);
+    void add(UserAddVO userAddVO);
 
     /**
      * 更新用户
@@ -91,28 +65,9 @@ public interface UserService {
      */
     UserEditVO edit(Long id);
 
-    /**
-     * 已拥有的角色ids
-     *
-     * @param id 用户id
-     * @return
-     */
-    List<Long> roles(Long id);
 
-    /**
-     * 分配角色
-     *
-     * @param id
-     * @param rids
-     */
-    void assignRoles(Long id, Long[] rids);
 
-    /**
-     * 所有用户
-     *
-     * @return
-     */
-    List<User> findAll();
+
 
     /**
      * 用户登入
@@ -129,6 +84,6 @@ public interface UserService {
      *
      * @return
      */
-    UserInfoVO info();
+    UserVO info();
 
 }

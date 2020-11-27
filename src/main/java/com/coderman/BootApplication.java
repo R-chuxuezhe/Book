@@ -11,7 +11,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableTransactionManagement  //开启事务管理
 @MapperScan("com.coderman.api.*.mapper") //扫描mapper
 @SpringBootApplication
-@Import(FdfsClientConfig.class)
 @Slf4j
 public class BootApplication {
 

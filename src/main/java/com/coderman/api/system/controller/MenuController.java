@@ -1,6 +1,5 @@
 package com.coderman.api.system.controller;
 
-import com.coderman.api.common.annotation.ControllerEndpoint;
 import com.coderman.api.common.bean.ResponseBean;
 import com.coderman.api.common.pojo.system.Menu;
 import com.coderman.api.system.service.MenuService;
@@ -54,7 +53,6 @@ public class MenuController {
      *
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "新增菜单/按钮失败", operation = "新增菜单/按钮")
     @ApiOperation(value = "新增菜单")
     //@RequiresPermissions({"menu:add"})
     @PostMapping("/add")
@@ -74,7 +72,6 @@ public class MenuController {
      * @param id
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "删除菜单/按钮失败", operation = "删除菜单/按钮")
     @ApiOperation(value = "删除菜单", notes = "根据id删除菜单节点")
     //@RequiresPermissions({"menu:delete"})
     @DeleteMapping("/delete/{id}")
@@ -104,26 +101,12 @@ public class MenuController {
      * @param menuVO
      * @return
      */
-    @ControllerEndpoint(exceptionMessage = "更新菜单失败", operation = "更新菜单")
     @ApiOperation(value = "更新菜单", notes = "根据id更新菜单节点")
     //@RequiresPermissions({"menu:update"})
     @PutMapping("/update/{id}")
     public ResponseBean update(@PathVariable Long id, @RequestBody @Validated MenuVO menuVO) {
         menuService.update(id, menuVO);
         return ResponseBean.success();
-    }
-
-    /**
-     * 导出excel
-     * @param response
-     */
-    @ApiOperation(value = "导出excel", notes = "导出所有菜单的excel表格")
-    @PostMapping("excel")
-    //@RequiresPermissions("menu:export")
-    @ControllerEndpoint(exceptionMessage = "导出Excel失败",operation = "导出菜单excel")
-    public void export(HttpServletResponse response) {
-        List<Menu> menus = this.menuService.findAll();
-        ExcelKit.$Export(Menu.class, response).downXlsx(menus, false);
     }
 
 }
