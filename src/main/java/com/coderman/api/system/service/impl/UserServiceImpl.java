@@ -179,21 +179,20 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户登入
-     * @param username
-     * @param password
+     * @param userAddVO
      * @return
      */
     @Override
-    public Map login(String username, String password) {
+    public Map login(UserAddVO userAddVO) {
         Map map=new HashMap();
         String token;
-        User user = findUserByName(username);
+        User user = findUserByName(userAddVO.getUsername());
         if (user != null) {
             String salt = user.getSalt();
             //秘钥为盐
-            String target = MD5Utils.md5Encryption(password, salt);
+            String target = MD5Utils.md5Encryption(userAddVO.getPassword(), salt);
             //生成Token
-            token = JWTUtils.sign(username, target);
+            token = JWTUtils.sign(userAddVO.getUsername(), target);
             JWTToken jwtToken = new JWTToken(token);
             try {
                 SecurityUtils.getSubject().login(jwtToken);

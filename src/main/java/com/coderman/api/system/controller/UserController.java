@@ -43,10 +43,9 @@ public class UserController {
      */
     @ApiOperation(value = "用户登入", notes = "接收参数用户名和密码,登入成功后,返回JWTToken")
     @PostMapping("/login")
-    public ResponseBean login(@NotBlank(message = "账号必填") String username,
-                              @NotBlank(message = "密码必填") String password,
+    public ResponseBean login(@RequestBody @Validated UserAddVO userAddVO,
                               HttpServletRequest request) {
-        Map map=userService.login(username,password);
+        Map map=userService.login(userAddVO);
         return ResponseBean.success(map);
     }
 

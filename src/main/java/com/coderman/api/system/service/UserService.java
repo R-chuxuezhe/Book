@@ -64,11 +64,10 @@ public interface UserService {
     /**
      * 用户登入
      *
-     * @param username
-     * @param password
+     * @param userAddVO
      * @return
      */
-    Map login(String username, String password);
+    Map login(UserAddVO userAddVO);
 
 
     /**
