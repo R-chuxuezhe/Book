@@ -37,6 +37,7 @@ com\coderman\api\book\vo\BookRankVo.class
 com\coderman\api\common\pojo\system\RoleMenu.class
 com\coderman\api\common\exception\BaseCodeInterface.class
 com\coderman\api\book\converter\CategoryListConverter.class
+com\coderman\api\book\vo\BookUpDownVo.class
 com\coderman\api\system\service\UploadService.class
 com\coderman\api\book\controller\RankController.class
 com\coderman\api\system\service\RoleService.class

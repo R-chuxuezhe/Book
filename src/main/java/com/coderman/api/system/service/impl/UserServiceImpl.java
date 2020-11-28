@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         if(sex!=null){
             criteria.andEqualTo("sex",sex);
         }
-        criteria.andNotEqualTo("type",1);
+        criteria.andEqualTo("type",1);
         List<User> userList = userMapper.selectByExample(o);
         List<UserVO> userVOS = userConverter.converterToUserVOList(userList);
         PageInfo<User> info=new PageInfo<>(userList);
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
      * @param status
      */
     @Override
-    public void updateStatus(Long id, Boolean status) {
+    public void updateStatus(Long id, Integer status) {
         User dbUser = userMapper.selectByPrimaryKey(id);
         if(dbUser==null){
             throw new ServiceException("要更新状态的用户不存在");
@@ -111,8 +111,7 @@ public class UserServiceImpl implements UserService {
         }else {
             User t = new User();
             t.setId(id);
-            t.setStatus(status? UserStatusEnum.DISABLE.getStatusCode() :
-                    UserStatusEnum.AVAILABLE.getStatusCode());
+            t.setStatus(status);
             userMapper.updateByPrimaryKeySelective(t);
         }
     }
@@ -144,29 +143,29 @@ public class UserServiceImpl implements UserService {
         user.setEmail("book@163.com");
         user.setSalt(salt);
         user.setType(UserTypeEnum.SYSTEM_USER.getTypeCode());//添加的用户默认是普通用户
-        user.setStatus(UserStatusEnum.AVAILABLE.getStatusCode());//添加的用户默认启用
+        user.setStatus(1);//添加的用户默认启用
         user.setAvatar("http://badidol.com/uploads/images/avatars/201910/24/18_1571921832_HG9E55x9NY.jpg");
         userMapper.insert(user);
     }
 
     /**
      * 更新
-     * @param id
+     * @param userVO
      * @param userVO
      */
     @Transactional
     @Override
-    public void update(Long id,UserEditVO userVO) {
-        User dbUser = userMapper.selectByPrimaryKey(id);
+    public void update(UserEditVO userVO) {
+        User dbUser = userMapper.selectByPrimaryKey(userVO.getId());
         @NotBlank(message = "用户名不能为空") String username = userVO.getUsername();
         if(dbUser==null){
-            throw new ServiceException("要删除的用户不存在");
+            throw new ServiceException("要更新的用户不存在");
         }
         Example o = new Example(User.class);
         o.createCriteria().andEqualTo("username",username);
         List<User> users = userMapper.selectByExample(o);
         if(!CollectionUtils.isEmpty(users)){
-            if(!users.get(0).getId().equals(id)){
+            if(!users.get(0).getId().equals(userVO.getId())){
                 throw new ServiceException("该用户名已被占用");
             }
         }
@@ -175,23 +174,6 @@ public class UserServiceImpl implements UserService {
         user.setModifiedTime(new Date());
         user.setId(dbUser.getId());
         userMapper.updateByPrimaryKeySelective(user);
-    }
-
-    /**
-     * 编辑
-     * @param id
-     * @return
-     */
-    @Transactional
-    @Override
-    public UserEditVO edit(Long id) {
-        User user = userMapper.selectByPrimaryKey(id);
-        if(user==null){
-            throw new ServiceException("要编辑的用户不存在");
-        }
-        UserEditVO userEditVO = new UserEditVO();
-        BeanUtils.copyProperties(user,userEditVO);
-        return userEditVO;
     }
 
 

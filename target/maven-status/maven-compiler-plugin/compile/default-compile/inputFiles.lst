@@ -83,6 +83,7 @@ D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\book\vo\BookRankVo.java
 D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\book\vo\BookFindingsVo.java
 D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\common\exception\ServiceException.java
 D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\book\mapper\BookMapper.java
+D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\book\vo\BookUpDownVo.java
 D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\book\service\BookService.java
 D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\common\config\web\GlobalExceptionHandler.java
 D:\GitHubXiangMu\Book\src\main\java\com\coderman\api\book\controller\BookController.java

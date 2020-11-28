@@ -41,7 +41,7 @@ public interface UserService {
      * @param id
      * @param status
      */
-    void updateStatus(Long id, Boolean status);
+    void updateStatus(Long id, Integer status);
 
     /**
      * 添加用户
@@ -52,18 +52,10 @@ public interface UserService {
     /**
      * 更新用户
      *
-     * @param id
+     * @param userVO
      * @param userVO
      */
-    void update(Long id,UserEditVO userVO);
-
-    /**
-     * 编辑用户
-     *
-     * @param id
-     * @return
-     */
-    UserEditVO edit(Long id);
+    void update(UserEditVO userVO);
 
 
 

@@ -118,7 +118,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void upDown(BookVo bookVo) {
+    public void upDown(BookUpDownVo bookVo) {
         Book book1=bookMapper.selectByPrimaryKey(bookVo.getId());
         if (book1==null){
             throw new ServiceException("该图书不存在!");

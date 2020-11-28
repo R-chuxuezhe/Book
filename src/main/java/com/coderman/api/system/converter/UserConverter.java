@@ -41,7 +41,6 @@ public class UserConverter {
     public  UserVO converterToUserVO(User user){
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
-        userVO.setStatus(user.getStatus() == 0);
         return userVO;
     }
 

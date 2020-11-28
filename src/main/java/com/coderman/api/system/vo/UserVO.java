@@ -28,7 +28,7 @@ public class UserVO{
     @NotBlank(message = "电话号码不能为空")
     private String phoneNumber;
 
-    private Boolean status;
+    private Integer status;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

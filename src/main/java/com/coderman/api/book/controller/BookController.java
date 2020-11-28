@@ -79,10 +79,10 @@ public class BookController {
      */
     @ApiOperation(value = "上下架书籍")
     @PostMapping("/upDown")
-    public ResponseBean upDown(@RequestBody @Validated BookVo bookVo) {
+    public ResponseBean upDown(@RequestBody @Validated BookUpDownVo upDownVo) {
         ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
-        bookVo.setCreateUser(activeUser.getUser().getId());
-        bookService.upDown(bookVo);
+        upDownVo.setCreateUser(activeUser.getUser().getId());
+        bookService.upDown(upDownVo);
         return ResponseBean.success("成功");
     }
 
@@ -136,7 +136,7 @@ public class BookController {
      * @param id  //书籍ID
      * @return
      */
-    @ApiOperation(value = "获取书籍的待审核", notes = "获取书籍的待审核")
+    @ApiOperation(value = "获取书籍的全部审核记录", notes = "获取书籍的全部审核记录")
     @GetMapping("/getBookFindingsAll/{id}")
     public ResponseBean getBookFindingsAll(@PathVariable Long id){
         List<BookFindings> bookFindingsList=bookService.getBookFindingsAll(id);

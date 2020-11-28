@@ -88,7 +88,7 @@ public class UserController {
      */
     @ApiOperation(value = "用户状态", notes = "禁用和启用这两种状态")
     @PutMapping("/updateStatus/{id}/{status}")
-    public ResponseBean updateStatus(@PathVariable Long id, @PathVariable Boolean status) {
+    public ResponseBean updateStatus(@PathVariable Long id, @PathVariable Integer status) {
         userService.updateStatus(id, status);
         return ResponseBean.success();
     }
@@ -96,27 +96,14 @@ public class UserController {
     /**
      * 更新用户
      *
-     * @param id
      * @param userEditVO
      * @return
      */
     @ApiOperation(value = "更新用户", notes = "更新用户信息")
-    @PutMapping("/update/{id}")
-    public ResponseBean update(@PathVariable Long id, @RequestBody @Validated UserEditVO userEditVO) {
-        userService.update(id, userEditVO);
+    @PostMapping("/update")
+    public ResponseBean update(@RequestBody @Validated UserEditVO userEditVO) {
+        userService.update(userEditVO);
         return ResponseBean.success();
-    }
-
-    /**
-     * 编辑用户
-     * @param id
-     * @return
-     */
-    @ApiOperation(value = "编辑用户", notes = "获取用户的详情，编辑用户信息")
-    @GetMapping("/edit/{id}")
-    public ResponseBean edit(@PathVariable Long id) {
-        UserEditVO userVO = userService.edit(id);
-        return ResponseBean.success(userVO);
     }
 
     /**

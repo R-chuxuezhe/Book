@@ -23,7 +23,7 @@ public interface BookService {
 
     void examine(BookFindingsEditVo bookFindingsEditVo);
 
-    void upDown(BookVo bookVo);
+    void upDown(BookUpDownVo bookVo);
 
     BookFindings getBookFindings(Long id);
 
