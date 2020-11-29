@@ -45,4 +45,8 @@ public class UserVO{
 
     private String avatar;
 
+    private Integer upCount;
+
+    private Integer downCount;
+
 }

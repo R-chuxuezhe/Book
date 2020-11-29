@@ -1,9 +1,13 @@
 package com.coderman.api.system.service.impl;
 
+import com.coderman.api.book.mapper.BookMapper;
+import com.coderman.api.book.mapper.RecordMapper;
 import com.coderman.api.common.bean.ActiveUser;
 import com.coderman.api.common.config.jwt.JWTToken;
 import com.coderman.api.common.exception.ErrorCodeEnum;
 import com.coderman.api.common.exception.ServiceException;
+import com.coderman.api.common.pojo.book.Book;
+import com.coderman.api.common.pojo.book.Record;
 import com.coderman.api.common.pojo.system.*;
 import com.coderman.api.common.utils.JWTUtils;
 import com.coderman.api.common.utils.MD5Utils;
@@ -41,9 +45,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserConverter userConverter;
 
+    @Autowired
+    private BookMapper bookMapper;
 
-
-
+    @Autowired
+    private RecordMapper recordMapper;
     /**
      * 查询用户
      * @param name 用户名
@@ -220,6 +226,17 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectByPrimaryKey(id);
         UserVO userVO=new UserVO();
         BeanUtils.copyProperties(user,userVO);
+        Example o2 = new Example(Book.class);
+        Example.Criteria criteria2 = o2.createCriteria();
+        criteria2.andEqualTo("createUser",id);
+        int upCount = bookMapper.selectCountByExample(o2);
+        userVO.setUpCount(upCount);  //上传量
+        Example o = new Example(Record.class);
+        Example.Criteria criteria = o.createCriteria();
+        criteria.andEqualTo("type",2);
+        criteria.andEqualTo("createUser",id);
+        int downCount=recordMapper.selectCountByExample(o);
+        userVO.setDownCount(downCount);
         return userVO;
     }
 }

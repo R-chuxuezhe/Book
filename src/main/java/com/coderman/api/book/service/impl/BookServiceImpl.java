@@ -5,20 +5,25 @@ import com.coderman.api.book.converter.CategoryListConverter;
 import com.coderman.api.book.mapper.*;
 import com.coderman.api.book.service.BookService;
 import com.coderman.api.book.vo.*;
+import com.coderman.api.common.bean.ActiveUser;
 import com.coderman.api.common.exception.ServiceException;
 import com.coderman.api.common.pojo.book.Book;
 import com.coderman.api.common.pojo.book.BookFindings;
 import com.coderman.api.common.pojo.book.Category;
 import com.coderman.api.common.pojo.book.Record;
+import com.coderman.api.common.pojo.system.User;
 import com.coderman.api.common.utils.CategoryTreeBuilder;
+import com.coderman.api.system.mapper.UserMapper;
 import com.coderman.api.system.vo.PageVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -35,9 +40,8 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private RecordMapper recordMapper;
-
     @Autowired
-    private RankMapper rankMapper;
+    private UserMapper userMapper;
 
     @Override
     public Book add(BookVo bookVo) {
@@ -48,6 +52,7 @@ public class BookServiceImpl implements BookService {
         book.setModifiedTime(new Date());
         book.setDelStatus(1);
         book.setUpDown(1);
+        book.setStatus(1);
         bookMapper.insert(book);
         //新增审核记录
         BookFindings bookFindings=new BookFindings();
@@ -105,15 +110,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void examine(BookFindingsEditVo bookFindingsEditVo) {
-        if(2==bookFindingsEditVo.getStatus()){
-            bookFindingsEditVo.setFindings("通过");
-        }
         BookFindings bookFindings=new BookFindings();
         BeanUtils.copyProperties(bookFindingsEditVo,bookFindings);
-        bookFindingsMapper.updateByPrimaryKeySelective(bookFindings);
+        if(2==bookFindingsEditVo.getStatus()){
+            bookFindings.setFindings("通过！");
+        }
+        Example o = new Example(BookFindings.class);
+        Example.Criteria criteria = o.createCriteria();
+        criteria.andEqualTo("bookId",bookFindingsEditVo.getBookId());
+        criteria.andEqualTo("status",1);
+        BookFindings bookFindings1=bookFindingsMapper.selectOneByExample(o);
+        bookFindings.setCreateTime(bookFindings1.getCreateTime());
+        bookFindingsMapper.updateByExample(bookFindings,o);
         Book book=new Book();
-        book.setId(bookFindings.getBookId());
-        book.setStatus(bookFindings.getStatus());
+        book.setId(bookFindingsEditVo.getBookId());
+        book.setStatus(bookFindingsEditVo.getStatus());
         bookMapper.updateByPrimaryKeySelective(book);
     }
 
@@ -162,17 +173,8 @@ public class BookServiceImpl implements BookService {
         Example o = new Example(Book.class);
         o.setOrderByClause("create_time desc");
         Example.Criteria criteria = o.createCriteria();
-        if (bookVo.getBookName() != null && !"".equals(bookVo.getBookName())) {
-            criteria.andLike("bookName", "%" + bookVo.getBookName() + "%");
-        }
-        if (bookVo.getAuthor() !=null && !"".equals(bookVo.getAuthor())){
-            criteria.andLike("author", "%" + bookVo.getAuthor() + "%");
-        }
         if (bookVo.getUpDown() !=null){
-            criteria.andLike("upDown", "%" + bookVo.getUpDown() + "%");
-        }
-        if (bookVo.getPress() !=null && !"".equals(bookVo.getPress())){
-            criteria.andLike("press", "%" + bookVo.getPress() + "%");
+            criteria.andEqualTo("upDown",bookVo.getUpDown());
         }
         if(bookVo.getStatus() !=null){
             criteria.andEqualTo("status",bookVo.getStatus());
@@ -184,10 +186,29 @@ public class BookServiceImpl implements BookService {
             criteria.andEqualTo("categoryId",bookVo.getCategoryId());
         }
         criteria.andEqualTo("delStatus",1);
+
+        if (bookVo.getKeyword() != null && !"".equals(bookVo.getKeyword())) {
+            criteria.andLike("bookName","%"+ bookVo.getKeyword() +"%" );
+        }
         List<Book> books = bookMapper.selectByExample(o);
         List<BookVo> bookVos= BookConverter.converterToVOList(books);
+        List<BookVo> bookVoList=getBookUserName(bookVos);
         PageInfo<Book> info = new PageInfo<>(books);
-        return new PageVO<>(info.getTotal(), bookVos);
+        return new PageVO<>(info.getTotal(), bookVoList);
+    }
+
+
+
+
+
+    public  List<BookVo> getBookUserName(List<BookVo> bookVos){
+        for(BookVo bookVo:bookVos){
+            User user= userMapper.selectByPrimaryKey(bookVo.getCreateUser());
+            Category category=categoryMapper.selectByPrimaryKey(bookVo.getCategoryId());
+           bookVo.setCreateUserName(user.getNickname());
+           bookVo.setCategoryName(category.getName());
+        }
+        return bookVos;
     }
 
 
@@ -238,8 +259,9 @@ public class BookServiceImpl implements BookService {
                 }
             }
         }
-        PageInfo<BookVo> info = new PageInfo<>(bookVos);
-        return new PageVO<>(info.getTotal(), bookVos);
+        List<BookVo> bookVoList=getBookUserName(bookVos);
+        PageInfo<BookVo> info = new PageInfo<>(bookVoList);
+        return new PageVO<>(info.getTotal(), bookVoList);
     }
 
     @Override
@@ -254,8 +276,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookRankVo> findRanking(Record record) {
+        List<Book> bookList=new ArrayList<>();
         List<BookRankVo> bookRankVos=new ArrayList<>();
-        List<Book> bookList=bookMapper.selectAll();
+        if(record.getCreateUser()!=null){
+            Example o2 = new Example(Book.class);
+            Example.Criteria criteria2 = o2.createCriteria();
+            criteria2.andEqualTo("createUser",record.getCreateUser());
+            bookList=bookMapper.selectByExample(o2);
+        }else {
+             bookList=bookMapper.selectAll();
+        }
         for (Book book:bookList){
             Example o = new Example(Record.class);
             Example.Criteria criteria = o.createCriteria();
@@ -264,11 +294,59 @@ public class BookServiceImpl implements BookService {
             int count=recordMapper.selectCountByExample(o);
             BookRankVo bookRankVo=new BookRankVo();
             BeanUtils.copyProperties(book,bookRankVo);
+            User user= userMapper.selectByPrimaryKey(book.getCreateUser());
+            Category category=categoryMapper.selectByPrimaryKey(book.getCategoryId());
+            bookRankVo.setCreateUserName(user.getNickname());
+            bookRankVo.setCategoryName(category.getName());
             bookRankVo.setOCC(count);
             bookRankVos.add(bookRankVo);
         }
         Collections.sort(bookRankVos,BookRankVo.occ());//降序
         return bookRankVos;
+    }
+
+    @Override
+    public int bookUpCount() {
+        ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
+        Long id=activeUser.getUser().getId();
+        Example o2 = new Example(Book.class);
+        Example.Criteria criteria2 = o2.createCriteria();
+        criteria2.andEqualTo("createUser",id);
+        int count = bookMapper.selectCountByExample(o2);
+        return count;
+    }
+
+    @Override
+    public List<RecordCountVo> coverReadCount(RecordCountVo recordCountVo) {
+        List<RecordCountVo> recordCountVoList=new ArrayList<>();
+        ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
+        Long id=activeUser.getUser().getId();
+        Example o = new Example(Book.class);
+        Example.Criteria criteria2 = o.createCriteria();
+        criteria2.andEqualTo("createUser",id);
+        List<Book> books = bookMapper.selectByExample(o);
+        int day=recordCountVo.getDay()-1;
+        for (int i=day;i>=0;i--){
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.DAY_OF_MONTH, -i);
+            String endDate = new SimpleDateFormat("yyyy-MM-dd").format(now.getTime());
+            RecordCountVo recordCountVo1=new RecordCountVo();
+            int dayCount=0;
+            for(int b=0;b<books.size();b++){
+                Example o2= new Example(Record.class);
+                Example.Criteria criteria = o2.createCriteria();
+                criteria.andEqualTo("type",recordCountVo.getType());
+                criteria.andEqualTo("bookId",books.get(b).getId());
+                criteria.andGreaterThanOrEqualTo("createTime",endDate+" 00:00:00");
+                criteria.andLessThanOrEqualTo("createTime",endDate+" 23:59:59");
+                int count=recordMapper.selectCountByExample(o2);
+                dayCount+=count;
+            }
+            recordCountVo1.setSdate(endDate);
+            recordCountVo1.setCoverRead(dayCount);
+            recordCountVoList.add(recordCountVo1);
+        }
+        return recordCountVoList;
     }
 
 

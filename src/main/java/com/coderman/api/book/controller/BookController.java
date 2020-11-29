@@ -202,4 +202,20 @@ public class BookController {
         int count=bookService.bookCount(record);
         return ResponseBean.success(count);
     }
+
+
+    /**
+     * 上传
+     *
+     * @return
+     */
+    @ApiOperation(value = "阅读或下载量查询")
+    @GetMapping("/bookUpCount")
+    public ResponseBean bookUpCount() {
+        int count=bookService.bookUpCount();
+        return ResponseBean.success(count);
+    }
+
+
+
 }

@@ -36,4 +36,8 @@ public interface BookService {
     int bookCount(Record record);
 
     List<BookRankVo> findRanking(Record record);
+
+    int bookUpCount();
+
+    List<RecordCountVo> coverReadCount(RecordCountVo recordCountVo);
 }

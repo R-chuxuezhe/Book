@@ -3,6 +3,7 @@ package com.coderman.api.book.controller;
 import com.coderman.api.book.service.BookService;
 import com.coderman.api.book.vo.BookRankVo;
 import com.coderman.api.book.vo.BookVo;
+import com.coderman.api.book.vo.RecordCountVo;
 import com.coderman.api.common.bean.ResponseBean;
 import com.coderman.api.common.pojo.book.Book;
 import com.coderman.api.common.pojo.book.Record;
@@ -10,6 +11,7 @@ import com.coderman.api.system.vo.PageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,4 +41,15 @@ public class RankController {
     }
 
 
+    /**
+     * 被阅读或下载量
+     *
+     * @return
+     */
+    @ApiOperation(value = "被阅读或下载量", notes = "被阅读或下载量")
+    @GetMapping("/coverReadCount")
+    public ResponseBean coverReadCount(@Validated RecordCountVo recordCountVo) {
+        List<RecordCountVo> recordCountVoList = bookService.coverReadCount(recordCountVo);
+        return ResponseBean.success(recordCountVoList);
+    }
 }

@@ -53,6 +53,10 @@ public class BookRankVo {
 
     private Integer OCC;
 
+    private String createUserName;
+
+    private String categoryName;
+
     /*
      * 排序,根据OCC排序  出现次数
      */

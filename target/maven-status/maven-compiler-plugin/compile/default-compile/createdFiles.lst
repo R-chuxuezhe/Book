@@ -13,11 +13,11 @@ com\coderman\api\system\controller\LogController.class
 com\coderman\api\common\config\web\SSLConfig.class
 com\coderman\api\system\converter\UserConverter.class
 com\coderman\api\common\config\web\SSLConfig$1.class
-com\coderman\api\book\vo\NumberVo.class
 com\coderman\api\system\service\LogService.class
 com\coderman\api\system\converter\RoleConverter.class
 com\coderman\api\book\vo\BookVo.class
 com\coderman\api\common\bean\ResponseBean.class
+com\coderman\api\book\vo\RecordCountVo.class
 com\coderman\api\common\exception\ErrorCodeEnum.class
 com\coderman\api\common\utils\ListPageUtils.class
 com\coderman\api\system\vo\MenuNodeVO.class
@@ -49,7 +49,6 @@ com\coderman\api\common\pojo\system\Role.class
 com\coderman\api\system\vo\LogVO.class
 com\coderman\api\system\mapper\RoleMenuMapper.class
 com\coderman\api\system\vo\MenuVO.class
-com\coderman\api\common\pojo\book\Number.class
 com\coderman\api\common\utils\IPUtil.class
 com\coderman\api\common\pojo\book\Book.class
 com\coderman\api\system\controller\UserController.class

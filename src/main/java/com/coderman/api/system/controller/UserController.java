@@ -37,8 +37,6 @@ public class UserController {
     /**
      * 用户登入
      *
-     * @param username: 用户名
-     * @param password: 密码
      * @return
      */
     @ApiOperation(value = "用户登入", notes = "接收参数用户名和密码,登入成功后,返回JWTToken")

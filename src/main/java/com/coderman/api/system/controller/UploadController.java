@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件上传
@@ -39,7 +41,9 @@ public class UploadController {
     @PostMapping("/image")
     public ResponseBean uploadImage(MultipartFile file) throws IOException {
         String realPath=uploadService.getUploadFilePath(file);
-        return ResponseBean.success(realPath);
+        Map map=new HashMap<>();
+        map.put("url",realPath);
+        return ResponseBean.success(map);
     }
 
 

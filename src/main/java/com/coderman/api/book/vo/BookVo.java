@@ -49,4 +49,10 @@ public class BookVo {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date recordTime;
+
+    private String createUserName;
+
+    private String categoryName;
+
+    private String keyword;
 }
