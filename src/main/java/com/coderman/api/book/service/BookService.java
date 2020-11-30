@@ -38,4 +38,6 @@ public interface BookService {
     int bookUpCount();
 
     List<RecordCountVo> coverReadCount(RecordCountVo recordCountVo);
+
+    void addRecord(RecordVo recordVo);
 }

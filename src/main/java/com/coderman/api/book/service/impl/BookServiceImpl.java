@@ -113,7 +113,7 @@ public class BookServiceImpl implements BookService {
         BookFindings bookFindings=new BookFindings();
         ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
         Long id=activeUser.getUser().getId();
-        bookFindings.setBookId(bookFindingsEditVo.getId());
+        bookFindings.setBookId(bookFindingsEditVo.getBookId());
         bookFindings.setCreateTime(new Date());
         bookFindings.setCreateUser(id);
         bookFindings.setFindings(bookFindingsEditVo.getFindings());
@@ -212,6 +212,7 @@ public class BookServiceImpl implements BookService {
             Example.Criteria criteria = o.createCriteria();
             criteria.andEqualTo("type",record.getType());
             criteria.andEqualTo("createUser",record.getCreateUser());
+            criteria.andEqualTo("delStatus",record.getDelStatus());
             recordList=recordMapper.selectByExample(o);
             for(Record records:recordList){
                 Example o2 = new Example(Book.class);
@@ -337,6 +338,14 @@ public class BookServiceImpl implements BookService {
             recordCountVoList.add(recordCountVo1);
         }
         return recordCountVoList;
+    }
+
+    @Override
+    public void addRecord(RecordVo recordVo) {
+        Record record=new Record();
+        BeanUtils.copyProperties(recordVo,record);
+        record.setCreateTime(new Date());
+        recordMapper.insert(record);
     }
 
 

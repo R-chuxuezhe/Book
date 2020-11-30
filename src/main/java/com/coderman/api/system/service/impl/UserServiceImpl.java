@@ -240,6 +240,7 @@ public class UserServiceImpl implements UserService {
         Example.Criteria criteria = o.createCriteria();
         criteria.andEqualTo("type",2);
         criteria.andEqualTo("createUser",id);
+        criteria.andEqualTo("delStatus",1);
         int downCount=recordMapper.selectCountByExample(o);
         userVO.setDownCount(downCount);
         return userVO;

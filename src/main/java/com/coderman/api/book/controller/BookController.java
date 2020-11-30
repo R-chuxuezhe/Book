@@ -201,6 +201,16 @@ public class BookController {
         return ResponseBean.success(count);
     }
 
-
+    /**
+     *
+     *添加阅读或下载记录
+     * @return
+     */
+    @ApiOperation(value = "添加阅读或下载记录")
+    @PostMapping("/addOrDelRecord")
+    public ResponseBean addOrDelRecord(@RequestBody @Validated RecordVo recordVo) {
+        bookService.addRecord(recordVo);
+        return ResponseBean.success("成功");
+    }
 
 }

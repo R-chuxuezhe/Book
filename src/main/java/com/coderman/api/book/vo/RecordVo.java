@@ -23,4 +23,6 @@ public class RecordVo {
 
     @NotNull(message = "创建人不能为空")
     private Long createUser;
+
+    private Integer delStatus;
 }

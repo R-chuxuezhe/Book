@@ -24,4 +24,6 @@ public class Record {
     private Long bookId;
 
     private Long createUser;
+
+    private Integer delStatus;
 }
