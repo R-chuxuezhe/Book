@@ -1,9 +1,6 @@
 package com.coderman.api.system.service.impl;
 
 
-import com.coderman.api.common.exception.ServiceException;
-import com.coderman.api.common.pojo.system.ImageAttachment;
-import com.coderman.api.system.mapper.ImageAttachmentMapper;
 import com.coderman.api.system.service.UploadService;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -26,9 +23,6 @@ import java.util.Random;
  **/
 @Service
 public class UploadServiceImpl implements UploadService {
-
-    @Autowired
-    private ImageAttachmentMapper attachmentMapper;
 
     //图片存放根路径
     @Value("${file.rootPath}")
@@ -97,16 +91,6 @@ public class UploadServiceImpl implements UploadService {
     }
 
 
-    @Override
-    public void delete(Long id) {
-        ImageAttachment image = attachmentMapper.selectByPrimaryKey(id);
-        if(image==null){
-            throw new ServiceException("图片不存在");
-        }else {
-            attachmentMapper.deleteByPrimaryKey(id);
-            deleteFileImg(image.getPath().replace((HOST + ":" + POST),""));
-        }
-    }
 
     private static boolean running = false;
     public void deleteFileImg(String IMG_PATH){

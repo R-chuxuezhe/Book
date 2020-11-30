@@ -2,8 +2,6 @@ package com.coderman.api.common.config.shiro;
 
 import com.coderman.api.common.bean.ActiveUser;
 import com.coderman.api.common.config.jwt.JWTToken;
-import com.coderman.api.common.pojo.system.Menu;
-import com.coderman.api.common.pojo.system.Role;
 import com.coderman.api.common.pojo.system.User;
 import com.coderman.api.common.utils.JWTUtils;
 import com.coderman.api.system.service.UserService;
@@ -15,13 +13,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserRealm extends AuthorizingRealm {

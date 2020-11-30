@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService {
         if(sex!=null){
             criteria.andEqualTo("sex",sex);
         }
-        criteria.andEqualTo("type",1);
         List<User> userList = userMapper.selectByExample(o);
         List<UserVO> userVOS = userConverter.converterToUserVOList(userList);
         PageInfo<User> info=new PageInfo<>(userList);
@@ -143,14 +142,18 @@ public class UserServiceImpl implements UserService {
         user.setModifiedTime(new Date());
         user.setCreateTime(new Date());
         user.setBirth(new Date());
-        user.setNickname(username);
-        user.setSex(0);
-        user.setPhoneNumber("15689665688");
-        user.setEmail("book@163.com");
+        user.setNickname(userAddVO.getNickname()==null? username : userAddVO.getNickname());
+        user.setSex(userAddVO.getSex()==null ? 0 :userAddVO.getSex());
+        user.setPhoneNumber(userAddVO.getPhoneNumber()==null? "15689886666": userAddVO.getPhoneNumber());
+        user.setEmail(userAddVO.getEmail()==null? "book@163.com": userAddVO.getEmail());
         user.setSalt(salt);
-        user.setType(UserTypeEnum.SYSTEM_USER.getTypeCode());//添加的用户默认是普通用户
+        user.setType(userAddVO.getType()==null? 1 : userAddVO.getType());
         user.setStatus(1);//添加的用户默认启用
-        user.setAvatar("http://badidol.com/uploads/images/avatars/201910/24/18_1571921832_HG9E55x9NY.jpg");
+        if(userAddVO.getAvatar()==null || "".equals(userAddVO.getAvatar()) ){
+            user.setAvatar("http://badidol.com/uploads/images/avatars/201910/24/18_1571921832_HG9E55x9NY.jpg");
+        }else {
+            user.setAvatar(userAddVO.getAvatar());
+        }
         userMapper.insert(user);
     }
 
@@ -220,10 +223,12 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public UserVO info() {
-        ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
-        Long id=activeUser.getUser().getId();
+    public UserVO info(User u) {
+        Long id=u.getId();
         User user = userMapper.selectByPrimaryKey(id);
+        if(user==null){
+            throw new ServiceException("该用户名不存在");
+        }
         UserVO userVO=new UserVO();
         BeanUtils.copyProperties(user,userVO);
         Example o2 = new Example(Book.class);

@@ -1,7 +1,5 @@
 package com.coderman.api.system.service;
 
-import com.coderman.api.common.pojo.system.Menu;
-import com.coderman.api.common.pojo.system.Role;
 import com.coderman.api.common.pojo.system.User;
 import com.coderman.api.system.vo.*;
 
@@ -75,6 +73,6 @@ public interface UserService {
      *
      * @return
      */
-    UserVO info();
+    UserVO info(User user);
 
 }

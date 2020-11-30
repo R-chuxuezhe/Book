@@ -111,17 +111,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public void examine(BookFindingsEditVo bookFindingsEditVo) {
         BookFindings bookFindings=new BookFindings();
-        BeanUtils.copyProperties(bookFindingsEditVo,bookFindings);
-        if(2==bookFindingsEditVo.getStatus()){
-            bookFindings.setFindings("通过！");
-        }
-        Example o = new Example(BookFindings.class);
-        Example.Criteria criteria = o.createCriteria();
-        criteria.andEqualTo("bookId",bookFindingsEditVo.getBookId());
-        criteria.andEqualTo("status",1);
-        BookFindings bookFindings1=bookFindingsMapper.selectOneByExample(o);
-        bookFindings.setCreateTime(bookFindings1.getCreateTime());
-        bookFindingsMapper.updateByExample(bookFindings,o);
+        ActiveUser activeUser = (ActiveUser) SecurityUtils.getSubject().getPrincipal();
+        Long id=activeUser.getUser().getId();
+        bookFindings.setBookId(bookFindingsEditVo.getId());
+        bookFindings.setCreateTime(new Date());
+        bookFindings.setCreateUser(id);
+        bookFindings.setFindings(bookFindingsEditVo.getFindings());
+        bookFindings.setStatus(bookFindingsEditVo.getStatus());
+        //新增审核记录
+        bookFindingsMapper.insert(bookFindings);
         Book book=new Book();
         book.setId(bookFindingsEditVo.getBookId());
         book.setStatus(bookFindingsEditVo.getStatus());
@@ -140,14 +138,6 @@ public class BookServiceImpl implements BookService {
         bookMapper.updateByPrimaryKeySelective(book);
     }
 
-    @Override
-    public BookFindings getBookFindings(Long id) {
-        Example o = new Example(BookFindings.class);
-        Example.Criteria criteria = o.createCriteria();
-        criteria.andEqualTo("status",1);
-        criteria.andEqualTo("bookId",id);
-        return bookFindingsMapper.selectOneByExample(o);
-    }
 
     @Override
     public  List<BookFindings> getBookFindingsAll(Long id) {

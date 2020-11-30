@@ -1,6 +1,6 @@
 package com.coderman.api.book.vo;
 
-import com.coderman.api.system.vo.MenuNodeVO;
+
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

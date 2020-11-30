@@ -25,8 +25,6 @@ public interface BookService {
 
     void upDown(BookUpDownVo bookVo);
 
-    BookFindings getBookFindings(Long id);
-
     List<BookFindings> getBookFindingsAll(Long id);
 
     List<CategoryListVo> getCategory();

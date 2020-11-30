@@ -56,7 +56,7 @@ public class UploadController {
     @ApiOperation(value = "删除图片", notes = "删除数据库记录,删除图片服务器上的图片")
     @DeleteMapping("/delete/{id}")
     public ResponseBean delete(@PathVariable Long id){
-        uploadService.delete(id);
+       // uploadService.delete(id);
         return ResponseBean.success();
     }
 

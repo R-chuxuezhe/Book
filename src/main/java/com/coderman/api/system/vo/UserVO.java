@@ -36,9 +36,11 @@ public class UserVO{
     @NotNull(message = "性别不能为空")
     private Integer sex;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy年MM月dd日")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @NotNull(message = "生日不能为空")
     private Date birth;
+
+    private Integer type;
 
     @NotBlank(message = "密码不能为空")
     private String password;

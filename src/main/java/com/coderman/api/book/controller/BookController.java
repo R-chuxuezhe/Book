@@ -115,21 +115,6 @@ public class BookController {
         }
     }
 
-    /**
-     * 获取书籍的待审核
-     * @param id  //书籍ID
-     * @return
-     */
-    @ApiOperation(value = "获取书籍的待审核", notes = "获取书籍的待审核")
-    @GetMapping("/getBookFindings/{id}")
-    public ResponseBean getBookFindings(@PathVariable Long id){
-        BookFindings bookFindings=bookService.getBookFindings(id);
-        if (bookFindings!=null){
-            return ResponseBean.success(bookFindings);
-        }else {
-            return ResponseBean.error("获取审核记录失败！");
-        }
-    }
 
     /**
      * 获取书籍的全部审核记录

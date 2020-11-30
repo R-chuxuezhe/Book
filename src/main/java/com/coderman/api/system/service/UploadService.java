@@ -21,5 +21,4 @@ public interface UploadService {
      */
     String getUploadFilePath(MultipartFile file)throws IOException;
 
-    void delete(Long id); //删除图片
 }

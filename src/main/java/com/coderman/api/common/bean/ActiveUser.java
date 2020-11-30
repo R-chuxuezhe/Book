@@ -1,7 +1,6 @@
 package com.coderman.api.common.bean;
 
-import com.coderman.api.common.pojo.system.Menu;
-import com.coderman.api.common.pojo.system.Role;
+
 import com.coderman.api.common.pojo.system.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,19 +18,13 @@ public class ActiveUser {
      * 当前用户对象
      */
     private User user;
-    /**
-     * 当前用户具有的角色
-     */
-    private List<Role> roles;
+
     /**
      * 当前用户具有的url
      */
     private Set<String> urls;
 
-    /**
-     * 包括url+permission
-     */
-    private List<Menu> menus;
+
     /**
      * 当前用户具有的权限API:例如[user:add],[user:delete]...
      */

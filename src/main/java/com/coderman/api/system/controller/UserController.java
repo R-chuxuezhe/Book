@@ -2,7 +2,6 @@ package com.coderman.api.system.controller;
 
 import com.coderman.api.common.bean.ResponseBean;;
 import com.coderman.api.common.pojo.system.User;
-import com.coderman.api.system.service.RoleService;
 import com.coderman.api.system.service.UserService;
 import com.coderman.api.system.vo.*;
 import io.swagger.annotations.Api;
@@ -69,9 +68,9 @@ public class UserController {
      * @return
      */
     @ApiOperation(value = "用户信息", notes = "用户登入信息")
-    @GetMapping("/info")
-    public ResponseBean info() {
-        UserVO userVO=userService.info();
+    @PostMapping("/info")
+    public ResponseBean info(@RequestBody User user) {
+        UserVO userVO=userService.info(user);
         return ResponseBean.success(userVO);
     }
 

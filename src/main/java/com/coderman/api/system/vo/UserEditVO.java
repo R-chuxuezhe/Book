@@ -30,7 +30,7 @@ public class UserEditVO {
 
     private Integer sex;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy年MM月dd日")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date birth;
 
     private String password;
