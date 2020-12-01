@@ -194,11 +194,24 @@ public class BookController {
      *
      * @return
      */
-    @ApiOperation(value = "阅读或下载量查询")
+    @ApiOperation(value = "上传")
     @GetMapping("/bookUpCount")
     public ResponseBean bookUpCount() {
         int count=bookService.bookUpCount();
         return ResponseBean.success(count);
+    }
+
+
+    /**
+     * 全部上传、下载、阅读
+     *
+     * @return
+     */
+    @ApiOperation(value = "全部上传、下载、阅读")
+    @GetMapping("/bookAllCount")
+    public ResponseBean bookAllCount() {
+        NumberVo numberVo=bookService.bookAllCount();
+        return ResponseBean.success(numberVo);
     }
 
     /**
@@ -207,10 +220,37 @@ public class BookController {
      * @return
      */
     @ApiOperation(value = "添加阅读或下载记录")
-    @PostMapping("/addOrDelRecord")
+    @PostMapping("/addRecord")
     public ResponseBean addOrDelRecord(@RequestBody @Validated RecordVo recordVo) {
         bookService.addRecord(recordVo);
         return ResponseBean.success("成功");
     }
 
+
+    /**
+     *
+     *删除阅读或下载记录
+     * @return
+     */
+    @ApiOperation(value = "删除阅读或下载记录")
+    @PostMapping("/delRecord")
+    public ResponseBean delRecord(@RequestBody @Validated RecordDelVo recordDelVo) {
+        bookService.delRecord(recordDelVo);
+        return ResponseBean.success("成功");
+    }
+
+
+    /**
+     * 分类的阅读或下载量查询
+     *
+     * @return
+     */
+    @ApiOperation(value = "分类的阅读或下载量查询")
+    @GetMapping("/bookCategoryCount")
+    public ResponseBean bookCategoryCount() {
+        List<CategoryIndexVo> categoryIndexVos=bookService.bookCategoryCount();
+        return ResponseBean.success(categoryIndexVos);
+    }
+
 }
+

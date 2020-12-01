@@ -261,6 +261,7 @@ public class BookServiceImpl implements BookService {
         Example.Criteria criteria = o.createCriteria();
         criteria.andEqualTo("type",record.getType());
         criteria.andEqualTo("createUser",record.getCreateUser());
+        criteria.andEqualTo("delStatus",1);
         int count=recordMapper.selectCountByExample(o);
         return count;
     }
@@ -303,6 +304,7 @@ public class BookServiceImpl implements BookService {
         Example o2 = new Example(Book.class);
         Example.Criteria criteria2 = o2.createCriteria();
         criteria2.andEqualTo("createUser",id);
+        criteria2.andEqualTo("delStatus",1);
         int count = bookMapper.selectCountByExample(o2);
         return count;
     }
@@ -346,6 +348,69 @@ public class BookServiceImpl implements BookService {
         BeanUtils.copyProperties(recordVo,record);
         record.setCreateTime(new Date());
         recordMapper.insert(record);
+    }
+
+    @Override
+    public void delRecord(RecordDelVo recordDelVo) {
+        Record record=new Record();
+        BeanUtils.copyProperties(recordDelVo,record);
+        recordMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public List<CategoryIndexVo> bookCategoryCount() {
+        List<Category> categoryList=categoryMapper.selectAll();
+        List<CategoryIndexVo> categoryIndexVos=new ArrayList<>();
+        for (Category category:categoryList){
+            CategoryIndexVo categoryIndexVo=new CategoryIndexVo();
+            Example o= new Example(Book.class);
+            Example.Criteria criteria = o.createCriteria();
+            criteria.andEqualTo("categoryId",category.getId());
+            criteria.andEqualTo("delStatus",1);
+            Integer bookCount=bookMapper.selectCountByExample(o);
+            List<Book> bookList=bookMapper.selectByExample(o);
+            Integer readCount=0;
+            Integer downCount=0;
+            for (Book book:bookList){
+                Example o2= new Example(Record.class);
+                Example.Criteria criteria2 = o2.createCriteria();
+                criteria2.andEqualTo("bookId",book.getId());
+                criteria2.andEqualTo("type",1);
+                criteria2.andEqualTo("delStatus",1);
+                Integer up_re=recordMapper.selectCountByExample(o2);
+                readCount+=up_re;
+                criteria2.andEqualTo("type",2);
+                Integer do_re=recordMapper.selectCountByExample(o2);
+                downCount+=do_re;
+            }
+           BeanUtils.copyProperties(category,categoryIndexVo);
+           categoryIndexVo.setAddCount(bookCount);
+           categoryIndexVo.setReadCount(readCount);
+           categoryIndexVo.setDownCount(downCount);
+            categoryIndexVos.add(categoryIndexVo);
+        }
+        return categoryIndexVos;
+    }
+
+    @Override
+    public NumberVo bookAllCount() {
+        NumberVo numberVo=new NumberVo();
+        Example o2 = new Example(Book.class);
+        Example.Criteria criteria2 = o2.createCriteria();
+        criteria2.andEqualTo("delStatus",1);
+        int addCount = bookMapper.selectCountByExample(o2);
+
+        Example o = new Example(Record.class);
+        Example.Criteria criteria = o.createCriteria();
+        criteria.andEqualTo("type",1);
+        criteria.andEqualTo("delStatus",1);
+        int readCount=recordMapper.selectCountByExample(o);
+        criteria.andEqualTo("type",2);
+        int downCount=recordMapper.selectCountByExample(o);
+        numberVo.setAddCount(addCount);
+        numberVo.setReadCount(readCount);
+        numberVo.setDownCount(downCount);
+        return numberVo;
     }
 
 

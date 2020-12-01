@@ -40,4 +40,11 @@ public interface BookService {
     List<RecordCountVo> coverReadCount(RecordCountVo recordCountVo);
 
     void addRecord(RecordVo recordVo);
+
+
+    void delRecord(RecordDelVo recordDelVo);
+
+    List<CategoryIndexVo> bookCategoryCount();
+
+    NumberVo bookAllCount();
 }
